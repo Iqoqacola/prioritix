@@ -1,9 +1,10 @@
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
+require('dotenv').config({ path: './.env.dev' });
 
-const DB_NAME = process.env.DB_NAME || 'prioritix';
-const DB_USER = process.env.DB_USER || 'root';
-const DB_PASSWORD = process.env.DB_PASSWORD || '';
-const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_NAME = process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_HOST = process.env.DB_HOST;
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     host: DB_HOST,
@@ -11,4 +12,4 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     logging: false,
 });
 
-module.exports = sequelize
+module.exports = sequelize;

@@ -4,7 +4,7 @@ USE prioritix;
 
 CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role ENUM("free", "pro", "admin") DEFAULT "free",
@@ -24,7 +24,7 @@ CREATE TABLE task (
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-INSERT INTO user (username, email, password_hash, role) VALUES
+INSERT INTO user (full_name, email, password_hash, role) VALUES
 ('admin', 'admin@example.com', '12345678', 'admin'),
 ('pro_user', 'pro_user@example.com', '12345678', 'pro'),
 ('free_user', 'free_user@example.com', '12345678', 'free');
