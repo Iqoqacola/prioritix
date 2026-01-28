@@ -24,7 +24,7 @@ const getTask = async (req, res) => {
         })
 
         if (!task) {
-            res.status(404).json({ message: "Task not found" })
+            return res.status(404).json({ message: "Task not found" })
         }
 
         res.json(task)
@@ -67,7 +67,7 @@ const updateTask = async (req, res) => {
         })
 
         if (!task) {
-            res.status(404).json({ message: "Task not found" })
+            return res.status(404).json({ message: "Task not found" })
         }
 
         await task.update(req.body);
@@ -88,7 +88,7 @@ const deleteTask = async (req, res) => {
         })
 
         if (!taskDeleted) {
-            res.status(404).json({ message: "Task not found" })
+            return res.status(404).json({ message: "Task not found" })
         }
 
         res.json({ message: "Task deleted succesfuly" })

@@ -59,7 +59,7 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Email or Password is wrong" })
         }
 
-        const token = generateToken(user._id)
+        const token = generateToken(user.id)
 
         res.header('Authorization', token).json({
             message: "Logged in succesfully",
