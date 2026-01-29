@@ -1,8 +1,36 @@
+@import "tailwindcss";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Scrollbar (Pindahkan dari index.html ke sini) */
+@theme {
+  /* Brand */
+  --color-primary: #259DF4;
+  --color-secondary: #1E85D1;
+
+  /* Status */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #38BDF8;
+
+  /* Accent */
+  --color-accent: #6366F1;
+  --color-accent-soft: #EEF2FF;
+
+  /* Neutral */
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-muted: #94A3B8;
+
+  /* Text */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+}
+
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
