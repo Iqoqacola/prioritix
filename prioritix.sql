@@ -7,7 +7,7 @@ CREATE TABLE user (
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM("free", "pro", "admin") DEFAULT "free",
+    role ENUM("free", "pro", "premium") DEFAULT "free",
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -25,7 +25,7 @@ CREATE TABLE task (
 ) ENGINE=InnoDB;
 
 INSERT INTO user (full_name, email, password_hash, role) VALUES
-('admin', 'admin@example.com', '12345678', 'admin'),
+('premium', 'premium@example.com', '12345678', 'premium'),
 ('pro_user', 'pro_user@example.com', '12345678', 'pro'),
 ('free_user', 'free_user@example.com', '12345678', 'free');
 
