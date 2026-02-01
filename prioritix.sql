@@ -24,10 +24,10 @@ CREATE TABLE task (
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-INSERT INTO user (full_name, email, password_hash, role) VALUES
-('premium', 'premium@example.com', '12345678', 'premium'),
-('pro_user', 'pro_user@example.com', '12345678', 'pro'),
-('free_user', 'free_user@example.com', '12345678', 'free');
+-- INSERT INTO user (full_name, email, password_hash, role) VALUES
+-- ('premium', 'premium@example.com', '12345678', 'premium'),
+-- ('pro_user', 'pro_user@example.com', '12345678', 'pro'),
+-- ('free_user', 'free_user@example.com', '12345678', 'free');
 
 INSERT INTO task (user_id, title, description, status, priority, due_date, tags) VALUES
 (1, 'Setup Project', 'Initial project setup and configuration', 'completed', 'high', '2024-07-01', 'setup,project'),

@@ -12,9 +12,18 @@ const generateToken = (_id) => {
 
 // Register User
 const registerUser = async (req, res) => {
-    const { full_name, email, password } = req.body;
+    const { full_name, email, password, confirm_password } = req.body;
 
     try {
+
+        if (!full_name || !email || !password) {
+            return res.status(400).json({ message: "All fields must be filled" });
+        }
+
+        if (password !== confirm_password) {
+            return res.status(400).json({ message: "Passwords do not match" })
+        }
+
         const emailExist = await User.findOne({ where: { email } });
 
         if (emailExist) {
@@ -49,6 +58,7 @@ const loginUser = async (req, res) => {
 
     try {
         const user = await User.findOne({ where: { email } })
+
 
         if (!user) {
             return res.status(400).json({ message: "Email or Password is wrong" })
