@@ -4,7 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Error from "./pages/Error";
-import Login from "./pages/Login";
+import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
         </Route>
 
-        <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
 
         <Route element={<ProtectedRoute />}>

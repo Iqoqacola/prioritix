@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Mail, Lock, ArrowRight, Github } from "lucide-react";
 import Logo from "../components/ui/Logo";
 
-const Login = () => {
+const Signin = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
@@ -141,4 +141,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signin;

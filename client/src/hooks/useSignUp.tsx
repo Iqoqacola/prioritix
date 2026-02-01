@@ -4,11 +4,13 @@ import { useAuthContext } from "./useAuthContext";
 export const useSignup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [succes, setSucces] = useState(null);
   const { dispatch } = useAuthContext();
 
   const signup = async (fullName, email, password, confirmPassword) => {
     setIsLoading(true);
     setError(null);
+    setSucces(null);
 
     const response = await fetch("/api/users/signup", {
       method: "POST",
@@ -29,13 +31,16 @@ export const useSignup = () => {
     }
 
     if (response.ok) {
-      localStorage.setItem("user", JSON.stringify(json));
+      localStorage.setItem("user", JSON.stringify(json.user));
+      localStorage.setItem("token", JSON.stringify(json.token));
 
       dispatch({ type: "LOGIN", payload: json });
 
       setIsLoading(false);
+
+      setSucces(json.message);
     }
   };
 
-  return { signup, isLoading, error };
+  return { signup, isLoading, error, succes };
 };

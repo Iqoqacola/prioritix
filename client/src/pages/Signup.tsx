@@ -1,8 +1,10 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import Logo from "../components/ui/Logo";
 import { useEffect, useState } from "react";
 import { useSignup } from "../hooks/useSignUp";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -10,13 +12,29 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { signup, error, isLoading } = useSignup();
+  const { signup, error, succes, isLoading } = useSignup();
+
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await signup(fullName, email, password, confirmPassword);
   };
+
+  useEffect(() => {
+    if (user) {
+      if (succes) {
+        const timer = setTimeout(() => {
+          navigate("/dashboard");
+        }, 3000);
+        return () => clearTimeout(timer);
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [user, navigate, succes]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -141,15 +159,24 @@ const Signup = () => {
               <ArrowRight size={18} />
             </button>
           </form>
-          {error && (
-            <div
-              className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative my-2"
-              role="alert"
-            >
-              <strong className="font-bold">Error: </strong>
-              <span className="block sm:inline">{error}</span>
-            </div>
-          )}
+          <div className="mt-4">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 text-red-600 px-4 py-3 rounded-xl flex items-start gap-3 transition-all animate-in fade-in slide-in-from-top-2">
+                <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <div className="text-sm">
+                  <span>{error}</span>
+                </div>
+              </div>
+            )}
+            {succes && (
+              <div className="bg-green-500/10 border border-green-500/20 text-green-600 px-4 py-3 rounded-xl flex items-start gap-3 transition-all animate-in fade-in slide-in-from-top-2">
+                <CheckCircle2 className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <div className="text-sm">
+                  <span>{succes}</span>
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className="mt-6">
             <div className="relative">
@@ -196,7 +223,7 @@ const Signup = () => {
         <p className="mt-8 text-center text-sm text-text-secondary">
           Already have an account?{" "}
           <Link
-            to="/login"
+            to="/signin"
             className="font-bold text-primary hover:text-secondary transition-colors"
           >
             Sign in here

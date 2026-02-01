@@ -4,7 +4,7 @@ const { loginUser, registerUser } = require('../controllers/authController.js');
 const router = express.Router();
 
 //Login Route
-router.post('/login', loginUser)
+router.post('/signin', loginUser)
 
 // Register Route 
 router.post('/signup', registerUser)
