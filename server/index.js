@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors')
 const userRoutes = require('./src/routes/user.js');
 const taskRoutes = require('./src/routes/task.js');
 const sequelize = require('./src/config/DB.js');
@@ -12,6 +13,13 @@ dotenv.config({
 const app = express();
 const port = process.env.PORT;
 
+const corsOptions = {
+    origin: process.env.ORIGIN,
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
+};
+
+app.use(cors())
 app.use(express.json());
 
 // Routes

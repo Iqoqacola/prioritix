@@ -1,10 +1,7 @@
 import { Link } from "react-router";
 import Logo from "../ui/Logo.js";
-import {
-  FOOTER_SECTIONS,
-  SOCIAL_LINKS,
-  LEGAL_LINKS,
-} from "../../constants/data.js";
+import { SOCIAL_LINKS, LEGAL_LINKS } from "../../constants/data.js";
+import { FOOTER_SECTIONS } from "../../constants/footer.js";
 
 const Footer = () => {
   return (

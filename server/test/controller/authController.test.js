@@ -43,7 +43,7 @@ describe('Auth Controller', () => {
                 user: {
                     id: 1,
                     full_name: 'Test User',
-                    email: 'Test User'
+                    email: 'test@example.com'
                 }
             });
         });
