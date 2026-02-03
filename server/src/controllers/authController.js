@@ -49,7 +49,6 @@ const registerUser = async (req, res) => {
             full_name: formattedName,
             email,
             password_hash: hashedPassword,
-            role: "free",
         })
 
         const token = generateToken(newUser.id)
@@ -59,7 +58,9 @@ const registerUser = async (req, res) => {
             user: {
                 full_name: newUser.full_name,
                 email: newUser.email,
-                role: newUser.role
+                role: newUser.role,
+                avatar_path: newUser.avatar_path || "anjenk",
+                created_at: newUser.created_at || "ANJENK"
             },
             token: token
         })
@@ -92,7 +93,9 @@ const loginUser = async (req, res) => {
             user: {
                 full_name: user.full_name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                avatar_path: user.avatar_path || "ANJENK",
+                created_at: user.created_at || "ANJENK"
             },
             token: token,
         })

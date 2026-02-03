@@ -5,7 +5,9 @@ export const ProfileOpen = ({ user, handleSignOut }) => {
         <p className="text-sm font-medium text-text-primary truncate">
           {user?.full_name}
         </p>
-        <p className="text-xs text-text-secondary truncate">{user?.role}</p>
+        <p className="text-xs text-text-secondary truncate capitalize">
+          {user?.role}
+        </p>
       </div>
 
       <a

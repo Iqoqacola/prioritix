@@ -8,6 +8,7 @@ CREATE TABLE user (
     email VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role ENUM("free", "pro", "premium") DEFAULT "free",
+    avatar_path VARCHAR(255) DEFAULT "/uploads/avatars/avatar-default.png", 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 

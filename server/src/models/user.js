@@ -14,6 +14,12 @@ const User = sequelize.define("User", {
     role: {
         type: DataTypes.ENUM('free', 'pro', 'premium'),
         defaultValue: 'free'
+    },
+    avatar_path: {
+        type: DataTypes.STRING(255), allowNull: true, defaultValue: "/uploads/avatars/avatar-default.png"
+    }, created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
     }
 }, { tableName: "user", timestamps: false });
 

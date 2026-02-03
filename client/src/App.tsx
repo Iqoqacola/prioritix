@@ -7,6 +7,8 @@ import Error from "./pages/Error";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import AppLayout from "./components/layout/App/AppLayout";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
 

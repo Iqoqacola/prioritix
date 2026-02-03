@@ -12,6 +12,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/uploads": {
+        target: "http://server:3000",
+        changeOrigin: true,
+      },
     },
     watch: {
       usePolling: true,

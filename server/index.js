@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors')
+const cors = require('cors');
+const path = require('path');
 const userRoutes = require('./src/routes/user.js');
 const taskRoutes = require('./src/routes/task.js');
 const sequelize = require('./src/config/DB.js');
@@ -21,6 +22,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/users', userRoutes);
