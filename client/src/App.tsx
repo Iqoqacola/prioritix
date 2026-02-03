@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Error from "./pages/Error";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import AppLayout from "./components/layout/App/AppLayout";
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
         <Route path="/signup" element={<Signup />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<Error />} />

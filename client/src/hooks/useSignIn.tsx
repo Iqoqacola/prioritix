@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-export const useSignup = () => {
-  const [error, setError] = useState(null);
+export const useSignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [succes, setSucces] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const signup = async (fullName, email, password, confirmPassword) => {
+  const signin = async (email: string, password: string, remember: boolean) => {
     setIsLoading(true);
     setError(null);
-    setSucces(null);
 
-    const response = await fetch("/api/users/signup", {
+    const jwt_expired = remember ? "30d" : "3d";
+
+    const response = await fetch("/api/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        full_name: fullName,
         email,
         password,
-        confirm_password: confirmPassword,
+        jwt_expired,
       }),
     });
 
@@ -28,6 +28,7 @@ export const useSignup = () => {
     if (!response.ok) {
       setIsLoading(false);
       setError(json.message);
+      console.log(json);
     }
 
     if (response.ok) {
@@ -41,6 +42,5 @@ export const useSignup = () => {
       setSucces(json.message);
     }
   };
-
-  return { signup, isLoading, error, succes };
+  return { signin, error, succes, isLoading };
 };

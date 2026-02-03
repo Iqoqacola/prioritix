@@ -22,12 +22,16 @@ describe('Auth Controller', () => {
             req.body = {
                 full_name: 'Test User',
                 email: 'test@example.com',
-                password: 'password123'
+                password: 'password123',
+                confirm_password: 'password123'
             };
 
             User.findOne.mockResolvedValue(null);
             bcrypt.genSalt.mockResolvedValue('salt');
             bcrypt.hash.mockResolvedValue('hashedPassword');
+
+            jwt.sign.mockReturnValue('valid_token');
+
             User.create.mockResolvedValue({
                 id: 1,
                 full_name: 'Test User',
@@ -41,15 +45,21 @@ describe('Auth Controller', () => {
             expect(res._getJSONData()).toEqual({
                 message: "User Registered Successfully",
                 user: {
-                    id: 1,
                     full_name: 'Test User',
-                    email: 'test@example.com'
-                }
+                    email: 'test@example.com',
+                    role: 'free'
+                },
+                token: 'valid_token'
             });
         });
 
         it('should return 400 if email already exists', async () => {
-            req.body = { email: 'exist@example.com', password: '123' };
+            req.body = {
+                full_name: 'Test User',
+                email: 'exist@example.com',
+                password: '123',
+                confirm_password: '123'
+            };
 
             User.findOne.mockResolvedValue({ id: 1, email: 'exist@example.com' });
 
@@ -67,7 +77,9 @@ describe('Auth Controller', () => {
             const mockUser = {
                 _id: 1,
                 email: 'test@example.com',
-                password_hash: 'hashedPassword'
+                password_hash: 'hashedPassword',
+                full_name: 'Test User',
+                role: 'free'
             };
 
             User.findOne.mockResolvedValue(mockUser);
@@ -77,7 +89,15 @@ describe('Auth Controller', () => {
             await loginUser(req, res);
 
             expect(res.statusCode).toBe(200);
-            expect(res._getJSONData()).toHaveProperty('token', 'valid_token');
+            expect(res._getJSONData()).toEqual({
+                message: "Logged in succesfully",
+                user: {
+                    full_name: 'Test User',
+                    email: 'test@example.com',
+                    role: 'free'
+                },
+                token: 'valid_token'
+            });
         });
 
         it('should return 400 if user not found', async () => {

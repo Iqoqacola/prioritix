@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Logo from "../components/ui/Logo";
 import { useEffect, useState } from "react";
 import { useSignup } from "../hooks/useSignUp";
@@ -12,6 +12,9 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const { signup, error, succes, isLoading } = useSignup();
 
   const { user } = useAuthContext();
@@ -19,7 +22,6 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     await signup(fullName, email, password, confirmPassword);
   };
 
@@ -28,7 +30,7 @@ const Signup = () => {
       if (succes) {
         const timer = setTimeout(() => {
           navigate("/dashboard");
-        }, 3000);
+        }, 2000);
         return () => clearTimeout(timer);
       } else {
         navigate("/dashboard");
@@ -66,8 +68,17 @@ const Signup = () => {
                   required
                   className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
                   placeholder="John Doe"
+                  value={fullName}
                   onChange={(e) => {
-                    setFullName(e.target.value);
+                    const rawValue = e.target.value;
+                    const formatted = rawValue
+                      .split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
+                      )
+                      .join(" ");
+
+                    setFullName(formatted);
                   }}
                 />
               </div>
@@ -113,14 +124,21 @@ const Signup = () => {
                 <input
                   minLength={8}
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
+                  className="block w-full pl-10 pr-10 py-3 border border-border rounded-xl bg-background text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
                   placeholder="At least 8 characters"
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-text-primary transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -139,14 +157,25 @@ const Signup = () => {
                 <input
                   minLength={8}
                   id="confirmPassword"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
+                  className="block w-full pl-10 pr-10 py-3 border border-border rounded-xl bg-background text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
                   placeholder="Re-type your password"
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
                   }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-text-primary transition-colors"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
               </div>
             </div>
 

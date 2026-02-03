@@ -117,7 +117,7 @@ describe('Task Controller', () => {
                 where: { id: 1, user_id: mockUserId }
             });
             expect(res.statusCode).toBe(200);
-            expect(res._getJSONData()).toEqual({ message: "Task deleted succesfuly" });
+            expect(res._getJSONData()).toEqual({ message: "Task deleted successfully" });
         });
     });
 });

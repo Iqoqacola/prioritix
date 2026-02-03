@@ -1,8 +1,32 @@
-import { Link } from "react-router";
-import { Mail, Lock, ArrowRight, Github } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Logo from "../components/ui/Logo";
+import { AlertCircle } from "lucide-react";
+import { useSignIn } from "../hooks/useSignIn";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Signin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { signin, error, isLoading } = useSignIn();
+
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signin(email, password, remember);
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
@@ -14,7 +38,7 @@ const Signin = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-surface py-8 px-6 shadow-xl border border-border rounded-2xl sm:px-10">
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -27,6 +51,9 @@ const Signin = () => {
                   <Mail size={18} />
                 </div>
                 <input
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   id="email"
                   type="email"
                   required
@@ -48,12 +75,22 @@ const Signin = () => {
                   <Lock size={18} />
                 </div>
                 <input
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"} // Dinamis
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
+                  className="block w-full pl-10 pr-10 py-3 border border-border rounded-xl bg-background text-text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-text-primary transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -62,6 +99,9 @@ const Signin = () => {
                 <input
                   id="remember-me"
                   type="checkbox"
+                  onChange={(e) => {
+                    setRemember(e.target.checked);
+                  }}
                   className="h-4 w-4 text-primary border-border rounded focus:ring-primary"
                 />
                 <label
@@ -71,15 +111,16 @@ const Signin = () => {
                   Remember me
                 </label>
               </div>
-              <a
+              {/* <a
                 href="#"
                 className="font-medium text-primary hover:text-secondary"
               >
                 Forgot password?
-              </a>
+              </a> */}
             </div>
 
             <button
+              disabled={isLoading}
               type="submit"
               className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-primary hover:bg-secondary transition-all transform hover:-translate-y-0.5"
             >
@@ -87,6 +128,17 @@ const Signin = () => {
               <ArrowRight size={18} />
             </button>
           </form>
+
+          <div className="mt-4">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 text-red-600 px-4 py-3 rounded-xl flex items-start gap-3 transition-all animate-in fade-in slide-in-from-top-2">
+                <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <div className="text-sm">
+                  <span>{error}</span>
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className="mt-6">
             <div className="relative">
@@ -101,7 +153,6 @@ const Signin = () => {
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              {/* Google Button */}
               <button className="w-full inline-flex justify-center items-center gap-2 py-3 px-4 border border-border rounded-xl bg-surface text-sm font-medium text-text-secondary hover:bg-gray-50 transition-colors">
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path

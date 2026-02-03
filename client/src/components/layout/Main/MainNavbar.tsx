@@ -1,19 +1,24 @@
 import { Link } from "react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { HamburgerMain } from "../../ui/Menu";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const onClick = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <>
       <div className="flex items-center gap-4">
         <div className="hidden md:flex items-center gap-4">
           <Link
-            to="/login"
+            to="/signin"
             className="text-text-secondary font-medium hover:text-primary px-4 py-2 transition-colors"
           >
-            Login
+            Sign In
           </Link>
           <Link
             to="/signup"
@@ -33,24 +38,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {isMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-white border-b border-gray-200 shadow-xl flex flex-col p-4 gap-3 md:hidden animate-in slide-in-from-top-5">
-          <Link
-            to="/login"
-            className="text-center text-text-secondary font-bold py-3 border border-gray-200 rounded-lg hover:bg-gray-50"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="text-center bg-primary text-white font-bold py-3 rounded-lg shadow-md hover:bg-secondary"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Sign Up
-          </Link>
-        </div>
-      )}
+      {isMenuOpen && HamburgerMain({ onClick })}
     </>
   );
 };
