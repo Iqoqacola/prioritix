@@ -29,17 +29,17 @@ const registerUser = async (req, res) => {
     try {
 
         if (!full_name || !email || !password) {
-            return res.status(400).json({ message: "All fields must be filled" });
+            return res.status(400).json({ error: "All fields must be filled" });
         }
 
         if (password !== confirm_password) {
-            return res.status(400).json({ message: "Passwords do not match" })
+            return res.status(400).json({ error: "Passwords do not match" })
         }
 
         const emailExist = await User.findOne({ where: { email } });
 
         if (emailExist) {
-            return res.status(400).json({ message: "Email already exists" })
+            return res.status(400).json({ error: "Email already exists" })
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -65,7 +65,7 @@ const registerUser = async (req, res) => {
             token: token
         })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -78,12 +78,12 @@ const loginUser = async (req, res) => {
 
 
         if (!user) {
-            return res.status(400).json({ message: "Email or Password is wrong" })
+            return res.status(400).json({ error: "Email or Password is wrong" })
         }
 
         const validPass = await bcrypt.compare(password, user.password_hash)
         if (!validPass) {
-            return res.status(400).json({ message: "Email or Password is wrong" })
+            return res.status(400).json({ error: "Email or Password is wrong" })
         }
 
         const token = generateToken(user.id, jwt_expired)
@@ -94,13 +94,13 @@ const loginUser = async (req, res) => {
                 full_name: user.full_name,
                 email: user.email,
                 role: user.role,
-                avatar_path: user.avatar_path || "ANJENK",
-                created_at: user.created_at || "ANJENK"
+                avatar_path: user.avatar_path,
+                created_at: user.created_at
             },
             token: token,
         })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 

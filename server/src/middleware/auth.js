@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     const authHeader = req.header('Authorization');
 
     if (!authHeader) {
-        return res.status(401).json({ message: "Access Denied" })
+        return res.status(401).json({ error: "Access Denied" })
     }
 
     const token = authHeader.replace('Bearer ', '');
@@ -15,6 +15,6 @@ module.exports = (req, res, next) => {
         req.user = verified;
         next();
     } catch (err) {
-        res.status(400).json({ message: "Invalid Token" });
+        res.status(400).json({ error: "Invalid Token" });
     }
 };

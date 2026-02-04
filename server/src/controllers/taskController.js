@@ -9,7 +9,7 @@ const getTasks = async (req, res) => {
 
         res.json(tasks)
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -24,12 +24,12 @@ const getTask = async (req, res) => {
         })
 
         if (!task) {
-            return res.status(404).json({ message: "Task not found" })
+            return res.status(404).json({ error: "Task not found" })
         }
 
         res.json(task)
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -50,7 +50,7 @@ const createTask = async (req, res) => {
 
         res.status(201).json(newTask)
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -67,13 +67,13 @@ const updateTask = async (req, res) => {
         })
 
         if (!task) {
-            return res.status(404).json({ message: "Task not found" })
+            return res.status(404).json({ error: "Task not found" })
         }
 
         await task.update(req.body);
         res.json({ message: "Task updated", task })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 
@@ -88,12 +88,12 @@ const deleteTask = async (req, res) => {
         })
 
         if (!taskDeleted) {
-            return res.status(404).json({ message: "Task not found" })
+            return res.status(404).json({ error: "Task not found" })
         }
 
         res.json({ message: "Task deleted successfully" })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ error: err.message })
     }
 }
 
