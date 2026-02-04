@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import { Home, AlertCircle } from "lucide-react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Error = () => {
+  const { user } = useAuthContext();
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-center">
       <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-danger/10">
@@ -22,7 +24,7 @@ const Error = () => {
       </p>
 
       <Link
-        to="/"
+        to={user ? "/dashboard" : "/"}
         className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       >
         <Home className="h-4 w-4" />

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { Routes, Route } from "react-router";
 import MainLayout from "./components/layout/Main/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
@@ -12,26 +12,24 @@ import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<LandingPage />} />
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<LandingPage />} />
+      </Route>
+
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/signup" element={<Signup />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
+      </Route>
 
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
-
-        <Route element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-        </Route>
-
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </BrowserRouter>
+      <Route path="*" element={<Error />} />
+    </Routes>
   );
 }
 

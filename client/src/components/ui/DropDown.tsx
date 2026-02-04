@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 export const ProfileOpen = ({ user, handleSignOut }) => {
   return (
     <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-surface border border-border py-1 shadow-lg focus:outline-none z-50">
@@ -10,18 +12,18 @@ export const ProfileOpen = ({ user, handleSignOut }) => {
         </p>
       </div>
 
-      <a
-        href="/profile"
+      <Link
+        to="/profile"
         className="block px-4 py-2 text-sm text-text-secondary hover:bg-background hover:text-text-primary"
       >
         Your Profile
-      </a>
-      <a
-        href="/settings"
+      </Link>
+      <Link
+        to="/settings"
         className="block px-4 py-2 text-sm text-text-secondary hover:bg-background hover:text-text-primary"
       >
         Settings
-      </a>
+      </Link>
 
       <div className="border-t border-border my-1"></div>
 

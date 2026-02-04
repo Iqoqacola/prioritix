@@ -27,8 +27,7 @@ export const useSignIn = () => {
 
     if (!response.ok) {
       setIsLoading(false);
-      setError(json.message);
-      console.log(json);
+      setError(json.error);
     }
 
     if (response.ok) {

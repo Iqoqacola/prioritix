@@ -15,20 +15,20 @@ const Navbar = () => {
   const profileRef = useRef(null);
   const notifRef = useRef(null);
 
-  // DUMMY DATA NOTIF
+  // DUMMY DATA NOTIF => get API if already done
   const notifications = [
-    {
-      id: 1,
-      text: "New comment on your post",
-      time: "2 min ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      text: "Server backup completed",
-      time: "1 hour ago",
-      unread: true,
-    },
+    // {
+    //   id: 1,
+    //   text: "New comment on your post",
+    //   time: "2 min ago",
+    //   unread: true,
+    // },
+    // {
+    //   id: 2,
+    //   text: "Server backup completed",
+    //   time: "1 hour ago",
+    //   unread: true,
+    // },
   ];
 
   const unreadCount = notifications.filter((n) => n.unread).length;
