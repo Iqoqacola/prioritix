@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router";
 import Header from "./MainHeader";
 import Footer from "../Footer";
 import { useEffect } from "react";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useAuthContext } from "../../../hooks/Auth/useAuthContext";
 
 const MainLayout = () => {
   const { user } = useAuthContext();

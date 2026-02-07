@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Home, AlertCircle } from "lucide-react";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/Auth/useAuthContext";
 
 const Error = () => {
   const { user } = useAuthContext();

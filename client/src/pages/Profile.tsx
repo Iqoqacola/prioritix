@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/Auth/useAuthContext";
 
 const Profile = () => {
   const { user } = useAuthContext();
 
   return (
-    <div className="h-[calc(100vh-64px)] bg-background p-6 flex justify-center items-center overflow-hidden">
+    <div className="h-[calc(85vh)] bg-background p-6 flex justify-center items-center overflow-hidden">
       <div className="w-full max-w-2xl bg-surface rounded-2xl shadow-sm border border-border overflow-hidden">
         <div className="p-8">
           <div className="flex flex-col items-center mb-8">

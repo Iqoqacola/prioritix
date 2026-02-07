@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router";
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Logo from "../components/ui/Logo";
 import { useEffect, useState } from "react";
-import { useSignup } from "../hooks/useSignUp";
+import { useSignup } from "../hooks/Auth/useSignUp";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/Auth/useAuthContext";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -71,10 +71,13 @@ const Signup = () => {
                   value={fullName}
                   onChange={(e) => {
                     const rawValue = e.target.value;
+
                     const formatted = rawValue
                       .split(" ")
                       .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase(),
                       )
                       .join(" ");
 

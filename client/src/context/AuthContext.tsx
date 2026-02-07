@@ -15,7 +15,7 @@ export const authReducer = (state, action) => {
 };
 
 export const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [state, dispatchAuth] = useReducer(authReducer, { user: null });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,19 +38,19 @@ export const AuthContextProvider = ({ children }) => {
           if (!response.ok) {
             localStorage.removeItem("user");
             localStorage.removeItem("token");
-            dispatch({ type: "LOGOUT" });
+            dispatchAuth({ type: "LOGOUT" });
 
             navigate("/signin");
           }
 
           if (response.ok) {
             const user = JSON.parse(userSTR);
-            dispatch({ type: "LOGIN", payload: user });
+            dispatchAuth({ type: "LOGIN", payload: user });
           }
         } catch (err) {
           localStorage.removeItem("user");
           localStorage.removeItem("token");
-          dispatch({ type: "LOGOUT" });
+          dispatchAuth({ type: "LOGOUT" });
 
           navigate("/signin");
         }
@@ -61,7 +61,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ ...state, dispatchAuth }}>
       {children}
     </AuthContext.Provider>
   );

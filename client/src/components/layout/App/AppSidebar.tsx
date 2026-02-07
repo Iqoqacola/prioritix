@@ -9,22 +9,21 @@ import {
   SidebarTeamsMenu,
 } from "../../ui/Menu";
 import { highlightsMenu, mainMenus } from "../../../constants/appSideBarMenu";
+import { useEffect } from "react";
+import { useProjectsContext } from "../../../hooks/Projects/useProjectsContext";
+import { useGetProjects } from "../../../hooks/Projects/useGetProjects";
+import { useGetTasks } from "../../../hooks/Tasks/useGetTasks";
+import { useTasksContext } from "../../../hooks/Tasks/useTasksContext";
 
-const Sidebar = ({ isOpen, onClose }) => {
-  // DUMMY DATA MENU => get API if already done
-  const projectsMenu = [
-    // {
-    //   label: "Website Portfolio",
-    //   path: "/project/portfolio",
-    //   color: "bg-purple-500",
-    // },
-    // { label: "Skripsi", path: "/project/skripsi", color: "bg-blue-500" },
-    // { label: "Renovasi Rumah", path: "/project/home", color: "bg-green-500" },
-  ];
+const Sidebar = ({ isOpen, onClose, handleAddProject, handleAddTeam }) => {
+  const { getTasks } = useGetTasks();
+  const { tasks } = useTasksContext();
+  const { getProjects } = useGetProjects();
+  const { projects } = useProjectsContext();
 
   const teamsMenu = [
-    // { label: "Design Team", path: "/team/design", icon: Users },
-    // { label: "Marketing", path: "/team/marketing", icon: Users },
+    { label: "Design Team", path: "/team/design", icon: Users },
+    { label: "Marketing", path: "/team/marketing", icon: Users },
   ];
 
   const handleLinkClick = () => {
@@ -32,6 +31,11 @@ const Sidebar = ({ isOpen, onClose }) => {
       onClose();
     }
   };
+
+  useEffect(() => {
+    getProjects();
+    getTasks();
+  }, [projects, tasks]);
 
   return (
     <>
@@ -77,19 +81,21 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           {/* PROJECTS */}
           <SidebarProjectsMenu
-            projects={projectsMenu}
+            projects={projects}
             handleLinkClick={handleLinkClick}
+            handleAddProject={handleAddProject}
           />
 
           {/* TEAMS */}
           <SidebarTeamsMenu
             teams={teamsMenu}
             handleLinkClick={handleLinkClick}
+            handleAddTeam={handleAddTeam}
           />
         </div>
 
         {/* FOOTER */}
-        <Footer />
+        <Footer handleLinkClick={handleLinkClick} />
       </aside>
     </>
   );

@@ -1,6 +1,7 @@
 const DataTypes = require("sequelize").DataTypes;
 const sequelize = require("../config/DB.js");
-const User = require("./user.js");
+const Project = require("./projectModels.js");
+const User = require("./userModels.js");
 
 const Task = sequelize.define("Task", {
     title: {
@@ -20,10 +21,16 @@ const Task = sequelize.define("Task", {
     },
     tags: {
         type: DataTypes.STRING(255), allowNull: true
+    },
+    starred: {
+        type: DataTypes.BOOLEAN, defaultValue: false
     }
 }, { tableName: "task", timestamps: false })
 
 User.hasMany(Task, { foreignKey: "user_id", onDelete: "CASCADE" });
+Project.hasMany(Task, { foreignKey: "project_id", onDelete: "CASCADE" });
+
 Task.belongsTo(User, { foreignKey: "user_id" });
+Task.belongsTo(Project, { foreignKey: "project_id" })
 
 module.exports = Task;

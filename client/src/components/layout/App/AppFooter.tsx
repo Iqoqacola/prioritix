@@ -1,8 +1,8 @@
 import { NavLink } from "react-router";
 import { Settings, LogOut } from "lucide-react";
-import { useSignout } from "../../../hooks/useSignOut";
+import { useSignout } from "../../../hooks/Auth/useSignOut";
 
-const Footer = () => {
+const Footer = ({ handleLinkClick }) => {
   const { signout } = useSignout();
 
   const handleSignOut = () => {
@@ -12,6 +12,7 @@ const Footer = () => {
     <div className="p-4 border-t border-gray-100 space-y-2">
       <NavLink
         to="/settings"
+        onClick={handleLinkClick}
         className={({ isActive }) =>
           `flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
             ${isActive ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`

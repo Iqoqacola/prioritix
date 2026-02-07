@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import Navbar from "./AppNavbar";
+import SearchBar from "../../ui/SearchBar";
 
 const Header = ({ onMenuClick }) => {
   return (
@@ -12,6 +13,7 @@ const Header = ({ onMenuClick }) => {
           >
             <Menu size={24} />
           </button>
+          <SearchBar />
         </div>
 
         <Navbar />

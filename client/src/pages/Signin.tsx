@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Logo from "../components/ui/Logo";
 import { AlertCircle } from "lucide-react";
-import { useSignIn } from "../hooks/useSignIn";
+import { useSignIn } from "../hooks/Auth/useSignIn";
 import { useEffect, useState } from "react";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/Auth/useAuthContext";
 
 const Signin = () => {
   const [email, setEmail] = useState("");

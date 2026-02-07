@@ -5,6 +5,7 @@ import {
   CalendarDays,
   Star,
   BarChart2,
+  Layers,
 } from "lucide-react";
 
 export const mainMenus = [
@@ -12,6 +13,7 @@ export const mainMenus = [
   { label: "Inbox", path: "/inbox", icon: Inbox, badge: 3 },
   { label: "Today", path: "/today", icon: Calendar },
   { label: "Upcoming", path: "/upcoming", icon: CalendarDays },
+  { label: "All Tasks", path: "/all-tasks", icon: Layers },
 ];
 
 export const highlightsMenu = [

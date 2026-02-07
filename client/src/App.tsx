@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import AppLayout from "./components/layout/App/AppLayout";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import AllTasks from "./pages/AllTasks";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/all-tasks" element={<AllTasks />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

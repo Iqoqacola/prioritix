@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-export const useSignIn = () => {
-  const [isLoading, setIsLoading] = useState(false);
+export const useSignup = () => {
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [succes, setSucces] = useState(null);
-  const { dispatch } = useAuthContext();
+  const { dispatchAuth } = useAuthContext();
 
-  const signin = async (email: string, password: string, remember: boolean) => {
+  const signup = async (fullName, email, password, confirmPassword) => {
     setIsLoading(true);
     setError(null);
+    setSucces(null);
 
-    const jwt_expired = remember ? "30d" : "3d";
-
-    const response = await fetch("/api/users/signin", {
+    const response = await fetch("/api/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        full_name: fullName,
         email,
         password,
-        jwt_expired,
+        confirm_password: confirmPassword,
       }),
     });
 
@@ -34,12 +34,13 @@ export const useSignIn = () => {
       localStorage.setItem("user", JSON.stringify(json.user));
       localStorage.setItem("token", JSON.stringify(json.token));
 
-      dispatch({ type: "LOGIN", payload: json.user });
+      dispatchAuth({ type: "LOGIN", payload: json.user });
 
       setIsLoading(false);
 
       setSucces(json.message);
     }
   };
-  return { signin, error, succes, isLoading };
+
+  return { signup, isLoading, error, succes };
 };

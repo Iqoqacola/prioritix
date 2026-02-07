@@ -17,7 +17,8 @@ const User = sequelize.define("User", {
     },
     avatar_path: {
         type: DataTypes.STRING(255), allowNull: true, defaultValue: "/uploads/avatars/avatar-default.png"
-    }, created_at: {
+    },
+    created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
     }

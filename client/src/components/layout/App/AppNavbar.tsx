@@ -1,7 +1,7 @@
 // AppNavbar.jsx
 import React, { useState, useRef, useEffect } from "react";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import { useSignout } from "../../../hooks/useSignOut";
+import { useAuthContext } from "../../../hooks/Auth/useAuthContext";
+import { useSignout } from "../../../hooks/Auth/useSignOut";
 import { NotificationsOpen, ProfileOpen } from "../../ui/DropDown";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 

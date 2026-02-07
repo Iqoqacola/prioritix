@@ -1,4 +1,4 @@
-const Task = require('../models/task.js')
+const Task = require('../models/taskModels.js')
 
 // Get all tasks
 const getTasks = async (req, res) => {
@@ -7,7 +7,7 @@ const getTasks = async (req, res) => {
             where: { user_id: req.user.id }
         })
 
-        res.json(tasks)
+        res.status(200).json(tasks)
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
@@ -35,16 +35,18 @@ const getTask = async (req, res) => {
 
 // Creaate task
 const createTask = async (req, res) => {
-    const { title, description, status, priority, due_date, tags } = req.body
+    const { title, project_id, description, status, priority, due_date, tags, starred } = req.body
 
     try {
         const newTask = await Task.create({
             title,
+            project_id,
             description,
             status,
             priority,
             due_date,
             tags,
+            starred,
             user_id: req.user.id
         })
 

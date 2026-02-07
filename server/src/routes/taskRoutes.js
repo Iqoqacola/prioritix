@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const auth = require('../middleware/auth.js');
 const { getTasks, getTask, createTask, updateTask, deleteTask } = require('../controllers/taskController.js')
 
 // Apply authentication middleware to all task routes

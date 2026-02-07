@@ -2,8 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-const userRoutes = require('./src/routes/user.js');
-const taskRoutes = require('./src/routes/task.js');
+const userRoutes = require('./src/routes/userRoutes.js');
+const taskRoutes = require('./src/routes/taskRoutes.js');
+const projectRoutes = require('./src/routes/projectRoutes')
 const sequelize = require('./src/config/DB.js');
 
 
@@ -26,6 +27,7 @@ app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes)
 app.use('/api/tasks', taskRoutes);
 
 // Connect to Database
