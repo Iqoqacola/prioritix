@@ -7,7 +7,7 @@ export const tasksReducer = (state, action) => {
     case "SET_TASKS":
       return { tasks: action.payload };
     case "CREATE_TASK":
-      return { tasks: [action.payload, ...state.tasks] };
+      return { tasks: [...state.tasks, action.payload] };
     case "REMOVE_TASK":
       return {
         tasks: state.tasks.filter((t) => t.id !== action.payload.id),
@@ -18,6 +18,8 @@ export const tasksReducer = (state, action) => {
           t.id === action.payload.id ? action.payload : t,
         ),
       };
+    default:
+      return state;
   }
 };
 

@@ -46,15 +46,12 @@ export const useCreateTask = () => {
     if (!response.ok) {
       setError(json.error);
       setIsLoading(false);
-
-      console.log("gagal");
     }
     if (response.ok) {
-      dispatchTasks({ type: "CREATE_TASK", payload: json });
-
       setIsLoading(false);
+      setSucces(json.message);
 
-      console.log("berhasil");
+      dispatchTasks({ type: "CREATE_TASK", payload: json });
     }
   };
 

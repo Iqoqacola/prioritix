@@ -33,7 +33,8 @@ export const useCreateProject = () => {
       setIsLoading(false);
     }
     if (response.ok) {
-      dispatchProjects({ type: "CREATE_PROJECTS", payload: json });
+      dispatchProjects({ type: "CREATE_PROJECT", payload: json });
+      console.log(json);
 
       setIsLoading(false);
     }

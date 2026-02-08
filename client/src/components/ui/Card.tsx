@@ -47,9 +47,6 @@ export const ProjectSectionCard = ({ project, tasks }) => {
               {project?.title}
             </h2>
           </div>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <MoreHorizontal size={16} className="text-text-secondary" />
-          </button>
         </div>
 
         {/* Progress Bar Line */}

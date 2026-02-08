@@ -1,4 +1,6 @@
 import { CheckCircle, Circle, Calendar, Plus } from "lucide-react";
+import { useState } from "react";
+import { useUpdateTask } from "../../hooks/Tasks/useUpdateTask";
 
 export const CreateButton = ({ handleCreateButtonClick }) => {
   return (
@@ -14,15 +16,36 @@ export const CreateButton = ({ handleCreateButtonClick }) => {
 };
 
 export const TaskRowButton = ({ task }) => {
+  const { updateTask } = useUpdateTask();
   const isDone = task?.status === "completed";
+
+  const handleUpdate = () => {
+    const newStatus = task.status === "completed" ? "in_progress" : "completed";
+
+    const taskUpdate = {
+      id: task.id,
+      title: task.title,
+      project_id: task.project_id,
+      description: task.description,
+      status: newStatus,
+      priority: task.priority,
+      due_date: task.due_date,
+      tags: task.tags,
+      starred: task.starred,
+    };
+
+    updateTask(taskUpdate);
+  };
 
   return (
     <div className="group flex items-center justify-between p-4 bg-white border-b border-border last:border-b-0 hover:bg-gray-50 transition-colors">
       {/* Left: Check & Text Area */}
       <div className="flex items-center gap-4 overflow-hidden">
-        {" "}
         {/* Check Button */}
-        <button className="flex-shrink-0 focus:outline-none hover:scale-110 transition-transform">
+        <button
+          className="flex-shrink-0 focus:outline-none hover:scale-110 transition-transform cursor-pointer"
+          onClick={handleUpdate}
+        >
           {isDone ? (
             <CheckCircle size={20} className="text-primary fill-accent-soft" />
           ) : (

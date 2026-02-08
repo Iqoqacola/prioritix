@@ -7,7 +7,7 @@ export const projectsReducer = (state, action) => {
     case "SET_PROJECTS":
       return { projects: action.payload };
     case "CREATE_PROJECT":
-      return { projects: [action.payload, ...state.projects] };
+      return { projects: [...state.projects, action.payload] };
     case "REMOVE_PROJECT":
       return {
         projects: state.projects.filter((t) => t.id !== action.payload.id),
@@ -18,6 +18,8 @@ export const projectsReducer = (state, action) => {
           t.id === action.payload.id ? action.payload : t,
         ),
       };
+    default:
+      return state;
   }
 };
 
