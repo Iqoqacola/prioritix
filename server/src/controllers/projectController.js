@@ -13,26 +13,6 @@ const getProjects = async (req, res) => {
     }
 }
 
-// Get single Project
-const getProject = async (req, res) => {
-    try {
-        const project = await Project.findOne({
-            where: {
-                id: req.params.id,
-                user_id: req.user.id
-            }
-        })
-
-        if (!project) {
-            return res.status(404).json({ error: "Project not found" })
-        }
-
-        res.json(project)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-}
-
 // Creaate Project
 const createProject = async (req, res) => {
     const { title, color } = req.body
@@ -94,5 +74,5 @@ const deleteProject = async (req, res) => {
 }
 
 module.exports = {
-    getProjects, getProject, createProject, updateProject, deleteProject
+    getProjects, createProject, updateProject, deleteProject
 }

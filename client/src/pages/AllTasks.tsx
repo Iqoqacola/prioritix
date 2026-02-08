@@ -5,6 +5,7 @@ import { useTasksContext } from "../hooks/Tasks/useTasksContext";
 import { useEffect, useState } from "react";
 import { useGetTasks } from "../hooks/Tasks/useGetTasks";
 import { CreateMenuActions } from "../components/ui/Menu";
+import { FilterButton, NewTaskButton } from "../components/ui/Button";
 
 const AllTasks = () => {
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
@@ -35,19 +36,9 @@ const AllTasks = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-border text-text-secondary rounded-lg text-sm font-medium hover:bg-gray-50 hover:text-text-primary transition-colors shadow-sm">
-              <Filter size={16} />
-              Filter
-            </button>
-
-            <button
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-secondary shadow-sm shadow-blue-200 transition-colors"
-              onClick={handleCreateMenu}
-            >
-              <Plus size={16} />
-              New Task
-            </button>
+          <div className="flex items-center gap-3 ml-8 md:ml-0">
+            <FilterButton />
+            <NewTaskButton handleCreateMenu={handleCreateMenu} />
           </div>
         </div>
 

@@ -1,4 +1,7 @@
-CREATE DATABASE IF NOT EXISTS prioritix;
+DROP DATABASE prioritix;
+
+CREATE DATABASE prioritix;
+-- CREATE DATABASE IF NOT EXISTS prioritix;
 
 USE prioritix;
 

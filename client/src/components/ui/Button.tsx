@@ -1,5 +1,4 @@
-import { CheckCircle, Circle, Calendar, Plus } from "lucide-react";
-import { useState } from "react";
+import { CheckCircle, Circle, Calendar, Plus, Filter } from "lucide-react";
 import { useUpdateTask } from "../../hooks/Tasks/useUpdateTask";
 
 export const CreateButton = ({ handleCreateButtonClick }) => {
@@ -107,5 +106,29 @@ export const TaskRowButton = ({ task }) => {
         </span>
       </div>
     </div>
+  );
+};
+
+export const NewTaskButton = ({ handleCreateMenu }) => {
+  return (
+    <button
+      onClick={handleCreateMenu}
+      className="flex items-center gap-2 px-5 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-secondary shadow-lg shadow-blue-500/20 transition-all transform hover:-translate-y-0.5"
+    >
+      <Plus size={18} strokeWidth={2.5} />
+      New Task
+    </button>
+  );
+};
+
+export const FilterButton = ({ handleFilter }) => {
+  return (
+    <button
+      className="flex items-center gap-2 px-4 py-2 bg-surface border border-border text-text-secondary rounded-xl text-sm font-medium hover:bg-gray-50 hover:text-text-primary transition-all shadow-sm"
+      onClick={handleFilter}
+    >
+      <Filter size={16} />
+      <span>Filter</span>
+    </button>
   );
 };

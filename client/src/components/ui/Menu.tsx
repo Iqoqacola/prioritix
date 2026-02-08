@@ -133,7 +133,7 @@ export const SidebarProjectsMenu = ({
           {projects?.map((project) => (
             <NavLink
               key={project.title}
-              to={`${toSlug(project.title)}-${project.id}`}
+              to={`/project/${toSlug(project.title)}-${project.id}`}
               onClick={handleLinkClick}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors

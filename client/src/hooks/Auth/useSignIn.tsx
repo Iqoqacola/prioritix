@@ -24,6 +24,7 @@ export const useSignIn = () => {
     });
 
     const json = await response.json();
+    console.log(json.error);
 
     if (!response.ok) {
       setIsLoading(false);
