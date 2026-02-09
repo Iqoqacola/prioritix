@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useTasksContext } from "../hooks/Tasks/useTasksContext";
 import { useProjectsContext } from "../hooks/Projects/useProjectsContext";
 import { useMemo, useState, useEffect } from "react";
@@ -16,11 +16,19 @@ import {
 } from "lucide-react";
 import { CreateMenuActions } from "../components/ui/Menu";
 import { FilterButton, NewTaskButton } from "../components/ui/Button";
+import { useUpdateTask } from "../hooks/Tasks/useUpdateTask";
+import { useRemoveTask } from "../hooks/Tasks/useRemoveTask";
+import { useRemoveProject } from "../hooks/Projects/useRemoveProject";
 
 const ProjectPage = () => {
   const { slug } = useParams();
   const { tasks } = useTasksContext();
   const { projects } = useProjectsContext();
+  const { updateTask } = useUpdateTask();
+  const { removeTask } = useRemoveTask();
+  const { removeProject } = useRemoveProject();
+
+  const navigate = useNavigate();
 
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
@@ -73,6 +81,24 @@ const ProjectPage = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const handleCompleted = (task) => {
+    const newStatus = task.status === "completed" ? "in_progress" : "completed";
+
+    const taskUpdate = {
+      id: task.id,
+      title: task.title,
+      project_id: task.project_id,
+      description: task.description,
+      status: newStatus,
+      priority: task.priority,
+      due_date: task.due_date,
+      tags: task.tags,
+      starred: task.starred,
+    };
+
+    updateTask(taskUpdate);
+  };
+
   const handleCreateMenu = () => {
     setIsCreateMenuOpen((prev) => !prev);
   };
@@ -82,9 +108,16 @@ const ProjectPage = () => {
     setActiveMenuId(null);
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    console.log("Delete task:", taskId);
+  const handleRemoveTask = (taskId: string) => {
+    removeTask(taskId);
     setActiveMenuId(null);
+  };
+
+  const handleRemoveProject = (projectId: string) => {
+    console.log(projectId);
+    removeProject(projectId);
+    navigate("/all-tasks");
+    console.log(projectId);
   };
 
   return (
@@ -134,7 +167,9 @@ const ProjectPage = () => {
                     </button>
                     <div className="h-px bg-border/50 mx-2"></div>
                     <button
-                      //   onClick={handleRemoveProject}
+                      onClick={() => {
+                        handleRemoveProject(projectId);
+                      }}
                       className="w-full px-4 py-2.5 text-left text-sm text-danger hover:bg-red-50 flex items-center gap-2 transition-colors"
                     >
                       <Trash2 size={14} /> Remove Project
@@ -202,7 +237,10 @@ const ProjectPage = () => {
                     ${task.status === "completed" ? "border-border opacity-75" : "border-border hover:border-primary/50"}`}
                 >
                   <div className="flex items-center gap-4 flex-1">
-                    <button className="flex-shrink-0 focus:outline-none hover:scale-110 transition-transform cursor-pointer">
+                    <button
+                      className="flex-shrink-0 focus:outline-none hover:scale-110 transition-transform cursor-pointer"
+                      onClick={() => handleCompleted(task)}
+                    >
                       {task.status === "completed" ? (
                         <CheckCircle
                           size={20}
@@ -305,7 +343,7 @@ const ProjectPage = () => {
                           </button>
                           <div className="h-px bg-border/50 mx-2"></div>
                           <button
-                            onClick={() => handleDeleteTask(task.id)}
+                            onClick={() => handleRemoveTask(task.id)}
                             className="w-full px-4 py-2.5 text-left text-sm text-danger hover:bg-red-50 flex items-center gap-2 transition-colors"
                           >
                             <Trash2 size={14} /> Delete

@@ -1,44 +1,41 @@
 import { useState } from "react";
 import { useProjectsContext } from "./useProjectsContext";
 
-export const useCreateProject = () => {
+export const useRemoveProject = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [succes, setSucces] = useState(null);
-  const { dispatchProjects } = useProjectsContext();
 
-  const createProject = async (title, color) => {
+  const { projects, dispatchProjects } = useProjectsContext();
+
+  const removeProject = async (id) => {
     setIsLoading(true);
     setError(null);
     setSucces(null);
 
     const jwt_token = JSON.parse(localStorage.getItem("token"));
 
-    const response = await fetch("/api/projects/", {
-      method: "POST",
+    const response = await fetch(`/api/projects/${id}`, {
+      method: "DELETE",
       headers: {
-        Authorization: `Bearer ${jwt_token}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt_token}`,
       },
-      body: JSON.stringify({
-        title,
-        color,
-      }),
     });
 
     const json = await response.json();
 
     if (!response.ok) {
+      setIsLoading(false);
       setError(json.error);
-      setIsLoading(false);
     }
-    if (response.ok) {
-      dispatchProjects({ type: "CREATE_PROJECT", payload: json });
 
+    if (response.ok) {
       setIsLoading(false);
-      console.log(error);
+      dispatchProjects({ type: "REMOVE_PROJECT", payload: { id } });
+      console.log(projects);
     }
   };
 
-  return { createProject };
+  return { removeProject, isLoading, error };
 };

@@ -17,7 +17,6 @@ import { useTasksContext } from "../../../hooks/Tasks/useTasksContext";
 
 const Sidebar = ({ isOpen, onClose, handleAddProject, handleAddTeam }) => {
   const { getTasks } = useGetTasks();
-  const { tasks } = useTasksContext();
   const { getProjects } = useGetProjects();
   const { projects } = useProjectsContext();
 
