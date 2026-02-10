@@ -99,6 +99,26 @@ const deleteTask = async (req, res) => {
     }
 }
 
+//Delete task by project
+const deleteTaskByProject = async (req, res) => {
+    try {
+        const taskDeleted = await Task.destroy({
+            where: {
+                user_id: req.user.id,
+                project_id: req.project_id,
+            }
+        })
+
+        if (!taskDeleted) {
+            return res.status(404).json({ error: "Task not found" })
+        }
+
+        res.json({ message: "Task deleted successfully" })
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+}
+
 module.exports = {
     getTasks, getTask, createTask, updateTask, deleteTask
 }

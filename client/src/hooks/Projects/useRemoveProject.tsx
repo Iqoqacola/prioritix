@@ -33,7 +33,6 @@ export const useRemoveProject = () => {
     if (response.ok) {
       setIsLoading(false);
       dispatchProjects({ type: "REMOVE_PROJECT", payload: { id } });
-      console.log(projects);
     }
   };
 

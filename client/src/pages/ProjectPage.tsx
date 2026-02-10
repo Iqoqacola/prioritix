@@ -37,6 +37,8 @@ const ProjectPage = () => {
   const parts = slug ? slug.split("-") : [];
   const projectId = parts.pop();
 
+  const projectIdInt = parseInt(projectId);
+
   const activeProject = useMemo(() => {
     return projects?.find((p) => p.id.toString() === projectId);
   }, [projects, projectId]);
@@ -104,20 +106,19 @@ const ProjectPage = () => {
   };
 
   const handleEditTask = (taskId: string) => {
+    console.log(projectId);
     console.log("Edit task:", taskId);
     setActiveMenuId(null);
   };
 
-  const handleRemoveTask = (taskId: string) => {
+  const handleRemoveTask = (taskId) => {
     removeTask(taskId);
     setActiveMenuId(null);
   };
 
-  const handleRemoveProject = (projectId: string) => {
-    console.log(projectId);
+  const handleRemoveProject = (projectId) => {
     removeProject(projectId);
     navigate("/all-tasks");
-    console.log(projectId);
   };
 
   return (
@@ -168,7 +169,7 @@ const ProjectPage = () => {
                     <div className="h-px bg-border/50 mx-2"></div>
                     <button
                       onClick={() => {
-                        handleRemoveProject(projectId);
+                        handleRemoveProject(projectIdInt);
                       }}
                       className="w-full px-4 py-2.5 text-left text-sm text-danger hover:bg-red-50 flex items-center gap-2 transition-colors"
                     >
