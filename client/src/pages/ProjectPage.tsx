@@ -21,12 +21,15 @@ import {
   TaskListButton,
 } from "../components/ui/Button";
 import { useRemoveProject } from "../hooks/Projects/useRemoveProject";
+import { useGetProjects } from "../hooks/Projects/useGetProjects";
+import { useGetTasks } from "../hooks/Tasks/useGetTasks";
 
 const ProjectPage = () => {
   const { slug } = useParams();
   const { tasks } = useTasksContext();
   const { projects } = useProjectsContext();
   const { removeProject } = useRemoveProject();
+  const { getTasks } = useGetTasks();
 
   const navigate = useNavigate();
 
@@ -113,6 +116,53 @@ const ProjectPage = () => {
   const getTaskActive = (task) => {
     setTaskActive(task);
   };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
+
+  if (projects === null) {
+    return (
+      <div className="w-full min-h-screen flex flex-col items-center justify-center bg-background p-6">
+        <div className="flex flex-col items-center gap-4">
+          {/* Spinner Animasi */}
+          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-text-primary">
+              Loading your project...
+            </h3>
+            <p className="text-sm text-text-secondary">
+              Preparing your tasks and workspace
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!activeProject && projects.length > 0) {
+    return (
+      <div className="w-full min-h-screen flex flex-col items-center justify-center bg-background p-6">
+        <div className="max-w-md w-full bg-surface border border-border rounded-2xl p-8 shadow-sm text-center">
+          <div className="w-16 h-16 bg-red-50 text-danger rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <ListTodo size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-text-primary mb-2">
+            Project Not Found
+          </h2>
+          <p className="text-text-secondary mb-8">
+            The project you're looking for doesn't exist or has been removed.
+          </p>
+          <button
+            onClick={() => navigate("/all-tasks")}
+            className="w-full py-3 px-6 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20"
+          >
+            Back to All Tasks
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

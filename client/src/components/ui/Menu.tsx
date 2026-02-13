@@ -849,8 +849,6 @@ export const EditMenuActions = ({
     if (INITIAL_DATA) {
       setFormData(INITIAL_DATA);
     }
-
-    console.log("tes");
   }, [slug, taskActive, projects]);
 
   if (!isOpen) return null;

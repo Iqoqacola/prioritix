@@ -10,11 +10,16 @@ import { FilterButton, NewTaskButton } from "../components/ui/Button";
 const AllTasks = () => {
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const { projects } = useProjectsContext();
+  const { getTasks } = useGetTasks();
   const { tasks } = useTasksContext();
 
   const handleCreateMenu = () => {
     setIsCreateMenuOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
 
   return (
     <>
