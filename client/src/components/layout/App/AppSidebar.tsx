@@ -33,7 +33,6 @@ const Sidebar = ({ isOpen, onClose, handleAddProject, handleAddTeam }) => {
 
   useEffect(() => {
     getProjects();
-    getTasks();
   }, []);
 
   return (

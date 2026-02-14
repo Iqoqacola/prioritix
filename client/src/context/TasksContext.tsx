@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 
-export const TasksContext = createContext(null);
+export const TasksContext = createContext([]);
 
 export const tasksReducer = (state, action) => {
   switch (action.type) {

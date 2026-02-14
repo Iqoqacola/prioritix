@@ -10,7 +10,12 @@ import {
 
 export const mainMenus = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { label: "Inbox", path: "/inbox", icon: Inbox, badge: 3 },
+  {
+    label: "Inbox",
+    path: "/inbox",
+    icon: Inbox,
+    // badge: 3
+  },
   { label: "Today", path: "/today", icon: Calendar },
   { label: "Upcoming", path: "/upcoming", icon: CalendarDays },
   { label: "All Tasks", path: "/all-tasks", icon: Layers },
