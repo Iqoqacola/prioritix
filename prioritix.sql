@@ -76,3 +76,22 @@ VALUES
 (1, 3, 'Model testing', 'Run experiment v1', 'pending', 'medium', '2026-02-18', 'ml,test', FALSE),
 
 (1, 3, 'Write report', 'Draft final report', 'pending', 'medium', '2026-02-25', 'report', FALSE);
+
+
+INSERT INTO project (user_id, title, color) VALUES
+(1, 'Ethical Clearance', '#EF4444');
+
+INSERT INTO task 
+(user_id, project_id, title, description, status, priority, due_date, tags, starred)
+VALUES
+(1, 4, 'Hubungi Admin Prodi & Dosen', 'Minta Nomor Surat Permohonan ke Admin & Minta TTD Dosen di Proposal', 'pending', 'high', '2026-02-18', 'admin,urgent', TRUE),
+
+(1, 4, 'Beli Materai 10.000', 'Untuk ditempel di Surat Pernyataan Peneliti', 'pending', 'low', '2026-02-18', 'logistik', FALSE),
+
+(1, 4, 'Isi Formulir Etik', 'Lengkapi: Surat Permohonan, Pernyataan, Data Peneliti, Informed Consent (8 poin), & Form 48 Butir', 'pending', 'high', '2026-02-20', 'dokumen,admin', TRUE),
+
+(1, 4, 'Bayar Biaya Etik', 'Transfer ke BNI 6323065550 a.n RPL 046 BLU POLTEKKES. Simpan struk/SS!', 'pending', 'high', '2026-02-21', 'keuangan', TRUE),
+
+(1, 4, 'Scan & Merge PDF', 'Scan KTP/KTM, Surat yg sdh TTD, Gabung Proposal jadi 1 file PDF utuh', 'pending', 'medium', '2026-02-22', 'teknis,pdf', FALSE),
+
+(1, 4, 'Upload & Submit Hardcopy', 'Upload ke bit.ly/PengajuanECInternal & Antar berkas fisik ke Sekretariat', 'pending', 'high', '2026-02-23', 'submission,milestone', TRUE);
