@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -31,22 +31,28 @@ type TaskKanbanProps = {
   onEdit: (task: Task) => void;
 };
 
+const groupTasksByStatus = (items: Task[]): BoardData => {
+  const grouped: BoardData = {
+    pending: [],
+    in_progress: [],
+    completed: [],
+  };
+
+  items.forEach((task) => {
+    grouped[task.status || "pending"].push(task);
+  });
+
+  return grouped;
+};
+
 export const TaskKanban = ({ tasks, onEdit }: TaskKanbanProps) => {
   const { updateTask } = useUpdateTask();
+  const groupedTasks = useMemo(() => groupTasksByStatus(tasks), [tasks]);
+  const [boardData, setBoardData] = useState<BoardData>(groupedTasks);
 
-  const boardData = useMemo<BoardData>(() => {
-    const grouped: BoardData = {
-      pending: [],
-      in_progress: [],
-      completed: [],
-    };
-
-    tasks.forEach((task) => {
-      grouped[task.status || "pending"].push(task);
-    });
-
-    return grouped;
-  }, [tasks]);
+  useEffect(() => {
+    setBoardData(groupedTasks);
+  }, [groupedTasks]);
 
   const columns = [
     {
@@ -74,6 +80,7 @@ export const TaskKanban = ({ tasks, onEdit }: TaskKanbanProps) => {
 
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
+
     if (
       !destination ||
       (destination.droppableId === source.droppableId &&
@@ -83,15 +90,29 @@ export const TaskKanban = ({ tasks, onEdit }: TaskKanbanProps) => {
     }
 
     const sourceColId = source.droppableId as TaskStatus;
-    const movedTask = boardData[sourceColId]?.[source.index];
     const destColId = destination.droppableId as TaskStatus;
 
+    const sourceTasks = [...boardData[sourceColId]];
+    const destTasks =
+      sourceColId === destColId ? sourceTasks : [...boardData[destColId]];
+
+    const [movedTask] = sourceTasks.splice(source.index, 1);
     if (!movedTask) return;
 
-    updateTask({
+    const updatedTask: Task = {
       ...movedTask,
       status: destColId,
-    });
+    };
+
+    destTasks.splice(destination.index, 0, updatedTask);
+
+    setBoardData((prev) => ({
+      ...prev,
+      [sourceColId]: sourceTasks,
+      [destColId]: destTasks,
+    }));
+
+    updateTask(updatedTask);
   };
 
   return (
