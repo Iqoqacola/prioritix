@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const userRoutes = require('./src/routes/userRoutes.js');
 const taskRoutes = require('./src/routes/taskRoutes.js');
-const projectRoutes = require('./src/routes/projectRoutes')
+const projectRoutes = require('./src/routes/projectRoutes');
 const sequelize = require('./src/config/DB.js');
 
 
@@ -13,7 +13,7 @@ dotenv.config({
 });
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 const corsOptions = {
     origin: process.env.ORIGIN,

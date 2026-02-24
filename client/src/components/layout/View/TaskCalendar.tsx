@@ -22,19 +22,19 @@ type Task = {
   due_date?: string;
 };
 
-type TaskCalenderProps = {
+type TaskCalendarProps = {
   tasks: Task[];
   onEdit: (task: Task) => void;
   onCreateTask?: () => void;
   onToggleTaskStatus?: (task: Task) => void;
 };
 
-export const TaskCalender = ({
+export const TaskCalendar = ({
   tasks,
   onEdit,
   onCreateTask,
   onToggleTaskStatus,
-}: TaskCalenderProps) => {
+}: TaskCalendarProps) => {
   const { updateTask } = useUpdateTask();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());

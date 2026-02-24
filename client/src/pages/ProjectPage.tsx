@@ -18,7 +18,7 @@ import { useRemoveProject } from "../hooks/Projects/useRemoveProject";
 import { useGetTasks } from "../hooks/Tasks/useGetTasks";
 
 import { TaskKanban } from "../components/layout/View/TaskKanban";
-import { TaskCalender } from "../components/layout/View/TaskCalender";
+import { TaskCalendar } from "../components/layout/View/TaskCalendar";
 import { TaskList } from "../components/layout/View/TaskList";
 
 type TaskStatus = "pending" | "in_progress" | "completed";
@@ -302,7 +302,7 @@ const ProjectPage = () => {
           )}
 
           {viewMode === "calendar" && (
-            <TaskCalender
+            <TaskCalendar
               tasks={projectTasks}
               onEdit={handleEditTaskDirect}
               onCreateTask={handleCreateMenu}
