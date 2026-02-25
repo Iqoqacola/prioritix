@@ -11,6 +11,8 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import AllTasks from "./pages/AllTasks";
 import ProjectPage from "./pages/ProjectPage";
+import StarredPage from "./pages/Starred";
+import AnalyticsPage from "./pages/Analytics";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/all-tasks" element={<AllTasks />} />
+          <Route path="/starred" element={<StarredPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/project/:slug" element={<ProjectPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
