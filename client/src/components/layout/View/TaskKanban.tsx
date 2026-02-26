@@ -1,10 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  type DropResult,
-} from "@hello-pangea/dnd";
 import { CalendarDays } from "lucide-react";
 
 import { useUpdateTask } from "../../../hooks/Tasks/useUpdateTask";
@@ -50,6 +44,14 @@ export const TaskKanban = ({ tasks, onEdit }: TaskKanbanProps) => {
   const groupedTasks = useMemo(() => groupTasksByStatus(tasks), [tasks]);
   const [boardData, setBoardData] = useState<BoardData>(groupedTasks);
 
+  // State untuk melacak item yang sedang di-drag
+  const [draggedItem, setDraggedItem] = useState<{
+    id: number;
+    colId: TaskStatus;
+    index: number;
+  } | null>(null);
+  const [dragOverCol, setDragOverCol] = useState<TaskStatus | null>(null);
+
   useEffect(() => {
     setBoardData(groupedTasks);
   }, [groupedTasks]);
@@ -78,126 +80,194 @@ export const TaskKanban = ({ tasks, onEdit }: TaskKanbanProps) => {
     },
   ];
 
-  const handleDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    task: Task,
+    colId: TaskStatus,
+    index: number,
+  ) => {
+    setDraggedItem({ id: task.id, colId, index });
+    // Menentukan efek visual kursor saat drag
+    e.dataTransfer.effectAllowed = "move";
+    // Set data kosong sebagai syarat agar drag berfungsi di beberapa browser
+    e.dataTransfer.setData("text/plain", "");
 
-    if (
-      !destination ||
-      (destination.droppableId === source.droppableId &&
-        destination.index === source.index)
-    ) {
-      return;
+    // CATATAN: Kode setTimeout untuk opacity 50% DIHAPUS di sini agar item tidak "hilang".
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    setDraggedItem(null);
+    setDragOverCol(null);
+    // CATATAN: Kode penghapus opacity juga DIHAPUS.
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    colId: TaskStatus,
+  ) => {
+    e.preventDefault(); // Wajib: Mencegah default behavior browser yang menolak drop
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverCol !== colId) {
+      setDragOverCol(colId);
     }
+  };
 
-    const sourceColId = source.droppableId as TaskStatus;
-    const destColId = destination.droppableId as TaskStatus;
+  const handleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    destColId: TaskStatus,
+    dropIndex?: number,
+  ) => {
+    e.preventDefault();
+    setDragOverCol(null);
+
+    if (!draggedItem) return;
+
+    const { id: taskId, colId: sourceColId, index: sourceIndex } = draggedItem;
+
+    // Jika di-drop di tempat yang sama persis, tidak perlu ada perubahan
+    if (
+      sourceColId === destColId &&
+      sourceIndex === dropIndex &&
+      dropIndex !== undefined
+    )
+      return;
 
     const sourceTasks = [...boardData[sourceColId]];
     const destTasks =
       sourceColId === destColId ? sourceTasks : [...boardData[destColId]];
 
-    const [movedTask] = sourceTasks.splice(source.index, 1);
-    if (!movedTask) return;
+    // Cari index terkini dari task yang di-drag (jaga-jaga kalau ada update async)
+    const currentTaskIndex = sourceTasks.findIndex((t) => t.id === taskId);
+    if (currentTaskIndex === -1) return;
 
+    // 1. Hapus task dari array kolom asal
+    const [movedTask] = sourceTasks.splice(currentTaskIndex, 1);
+
+    // Update status task agar sesuai kolom tujuan
     const updatedTask: Task = {
       ...movedTask,
       status: destColId,
     };
 
-    destTasks.splice(destination.index, 0, updatedTask);
+    // 2. Masukkan task ke array kolom tujuan
+    if (dropIndex !== undefined) {
+      // Kalau di-drop di atas task lain, selipkan di posisi tersebut
+      destTasks.splice(dropIndex, 0, updatedTask);
+    } else {
+      // Kalau di-drop di area kosong kolom, taruh paling bawah
+      destTasks.push(updatedTask);
+    }
 
+    // Update state board secara lokal (optimistic update) agar terasa cepat
     setBoardData((prev) => ({
       ...prev,
       [sourceColId]: sourceTasks,
       [destColId]: destTasks,
     }));
 
-    updateTask(updatedTask);
+    // Trigger update ke server jika status berubah (pindah kolom)
+    if (sourceColId !== destColId) {
+      updateTask(updatedTask);
+    }
+    // Catatan: Jika lu butuh menyimpan urutan baru dalam satu kolom,
+    // lu perlu memanggil API tambahan di sini untuk menyimpan order baru 'destTasks'.
   };
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)] min-h-[500px] pb-4 overflow-x-auto">
-        {columns.map((col) => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)] min-h-[500px] pb-4 overflow-x-auto">
+      {columns.map((col) => (
+        <div
+          key={col.id}
+          className={`flex flex-col h-full rounded-xl border ${col.border} ${col.bg} overflow-hidden transition-colors duration-200 ease-in-out`}
+        >
+          {/* Column Header */}
           <div
-            key={col.id}
-            className={`flex flex-col h-full rounded-xl border ${col.border} ${col.bg} overflow-hidden`}
+            className={`p-3 flex items-center justify-between border-b ${col.headerColors} backdrop-blur-sm`}
           >
-            <div
-              className={`p-3 flex items-center justify-between border-b ${col.headerColors} backdrop-blur-sm`}
-            >
-              <h3 className="font-bold text-sm">{col.label}</h3>
-              <span className="bg-white/60 px-2 py-0.5 rounded-full text-xs font-bold border border-black/5 shadow-sm">
-                {boardData[col.id]?.length || 0}
-              </span>
-            </div>
-            <Droppable droppableId={col.id}>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`flex-1 overflow-y-auto p-3 flex flex-col gap-3 transition-colors scrollbar-hide ${snapshot.isDraggingOver ? "bg-primary/5" : ""}`}
-                >
-                  {boardData[col.id]?.map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id.toString()}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          onClick={() => !snapshot.isDragging && onEdit(task)}
-                          style={{ ...provided.draggableProps.style }}
-                          className={`bg-white p-3.5 rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 group cursor-pointer select-none
-                            ${snapshot.isDragging ? "shadow-2xl ring-2 ring-primary z-50 opacity-90" : ""}`}
-                        >
-                          <div className="flex justify-between items-start mb-2">
-                            <span
-                              className={`text-[10px] px-2 py-0.5 rounded font-medium border uppercase tracking-wider
-                              ${
-                                task.priority === "high"
-                                  ? "bg-red-50 text-danger border-red-100/50"
-                                  : task.priority === "medium"
-                                    ? "bg-orange-50 text-warning border-orange-100/50"
-                                    : "bg-green-50 text-success border-green-100/50"
-                              }`}
-                            >
-                              {task.priority}
-                            </span>
-                          </div>
-                          <h4 className="font-semibold text-text-primary text-sm mb-1 line-clamp-1">
-                            {task.title}
-                          </h4>
-                          {task.description && (
-                            <p className="text-xs text-text-secondary line-clamp-2 mb-3">
-                              {task.description}
-                            </p>
-                          )}
-                          <div className="flex items-center justify-between pt-2 border-t border-dashed border-gray-100 mt-auto">
-                            {task.due_date && (
-                              <span className="text-xs text-text-secondary flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded">
-                                <CalendarDays size={10} />
-                                {new Date(task.due_date).toLocaleDateString(
-                                  undefined,
-                                  { month: "short", day: "numeric" },
-                                )}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+            <h3 className="font-bold text-sm">{col.label}</h3>
+            <span className="bg-white/60 px-2 py-0.5 rounded-full text-xs font-bold border border-black/5 shadow-sm">
+              {boardData[col.id]?.length || 0}
+            </span>
           </div>
-        ))}
-      </div>
-    </DragDropContext>
+
+          {/* Droppable Area */}
+          <div
+            // Event handlers untuk area kolom
+            onDragOver={(e) => handleDragOver(e, col.id)}
+            onDragLeave={() => setDragOverCol(null)}
+            onDrop={(e) => handleDrop(e, col.id)}
+            className={`flex-1 overflow-y-auto p-3 flex flex-col gap-3 scrollbar-hide transition-all duration-200 ease-in-out ${
+              dragOverCol === col.id
+                ? "bg-primary/5 ring-2 ring-inset ring-primary/20"
+                : ""
+            }`}
+          >
+            {boardData[col.id]?.map((task, index) => (
+              <div
+                key={task.id}
+                id={`task-${task.id}`}
+                draggable // Mengaktifkan fitur drag native HTML5
+                // Event handlers untuk item task
+                onDragStart={(e) => handleDragStart(e, task, col.id, index)}
+                onDragEnd={handleDragEnd}
+                // Handle drop pada task lain untuk fitur reordering
+                onDragOver={(e) => handleDragOver(e, col.id)}
+                onDrop={(e) => {
+                  // Mencegah bubbling agar drop tidak ditangani dua kali oleh kolom
+                  e.stopPropagation();
+                  handleDrop(e, col.id, index);
+                }}
+                onClick={() => {
+                  // Mencegah edit terpanggil saat selesai drag
+                  if (draggedItem?.id !== task.id) onEdit(task);
+                }}
+                // Styling dinamis berdasarkan state drag
+                className={`bg-white p-3.5 rounded-xl border border-border shadow-sm hover:shadow-md cursor-pointer select-none transition-all duration-200 ease-in-out
+                  ${
+                    draggedItem?.id === task.id
+                      ? "border-dashed border-primary/50 bg-gray-50 shadow-none" // Style saat item ini sedang di-drag (sumber)
+                      : ""
+                  }`}
+              >
+                {/* Task Content */}
+                <div className="flex justify-between items-start mb-2">
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded font-medium border uppercase tracking-wider
+                    ${
+                      task.priority === "high"
+                        ? "bg-red-50 text-danger border-red-100/50"
+                        : task.priority === "medium"
+                          ? "bg-orange-50 text-warning border-orange-100/50"
+                          : "bg-green-50 text-success border-green-100/50"
+                    }`}
+                  >
+                    {task.priority}
+                  </span>
+                </div>
+                <h4 className="font-semibold text-text-primary text-sm mb-1 line-clamp-1">
+                  {task.title}
+                </h4>
+                {task.description && (
+                  <p className="text-xs text-text-secondary line-clamp-2 mb-3">
+                    {task.description}
+                  </p>
+                )}
+                <div className="flex items-center justify-between pt-2 border-t border-dashed border-gray-100 mt-auto">
+                  {task.due_date && (
+                    <span className="text-xs text-text-secondary flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded">
+                      <CalendarDays size={10} />
+                      {new Date(task.due_date).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
