@@ -93,7 +93,9 @@ const AnalyticsPage = () => {
     const today = startOfDay();
 
     const completed = safeTasks.filter((t) => t.status === "completed").length;
-    const inProgress = safeTasks.filter((t) => t.status === "in_progress").length;
+    const inProgress = safeTasks.filter(
+      (t) => t.status === "in_progress",
+    ).length;
     const pending = safeTasks.filter((t) => t.status === "pending").length;
 
     const overdue = safeTasks.filter((t) => {
@@ -176,22 +178,51 @@ const AnalyticsPage = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-text-primary">Analytics</h1>
         <p className="text-text-secondary mt-1">
-          Snapshot performa task kamu dalam chart yang lebih kebaca.
+          Track progress, measure performance, and optimize workflow through
+          detailed task analytics.
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <MetricCard title="Total Tasks" value={safeTasks.length} icon={<ListTodo size={18} className="text-primary" />} />
-        <MetricCard title="Completed" value={completedCount} icon={<CheckCircle2 size={18} className="text-success" />} />
-        <MetricCard title="In Progress" value={inProgressCount} icon={<CircleDashed size={18} className="text-info" />} />
-        <MetricCard title="Overdue" value={overdueCount} icon={<CalendarClock size={18} className="text-danger" />} />
+        <MetricCard
+          title="Total Tasks"
+          value={safeTasks.length}
+          icon={<ListTodo size={18} className="text-primary" />}
+        />
+        <MetricCard
+          title="Completed"
+          value={completedCount}
+          icon={<CheckCircle2 size={18} className="text-success" />}
+        />
+        <MetricCard
+          title="In Progress"
+          value={inProgressCount}
+          icon={<CircleDashed size={18} className="text-info" />}
+        />
+        <MetricCard
+          title="Overdue"
+          value={overdueCount}
+          icon={<CalendarClock size={18} className="text-danger" />}
+        />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-        <ChartCard title="Task Status Distribution" icon={<Target size={18} className="text-primary" />}>
+        <ChartCard
+          title="Task Status Distribution"
+          icon={<Target size={18} className="text-primary" />}
+        >
           <ResponsiveContainer width="100%" height={320}>
             <PieChart>
-              <Pie data={statusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={110} innerRadius={60} paddingAngle={4}>
+              <Pie
+                data={statusData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={110}
+                innerRadius={60}
+                paddingAngle={4}
+              >
                 {statusData.map((entry) => (
                   <Cell key={entry.name} fill={entry.color} />
                 ))}
@@ -202,7 +233,10 @@ const AnalyticsPage = () => {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Priority Breakdown" icon={<BarChart3 size={18} className="text-primary" />}>
+        <ChartCard
+          title="Priority Breakdown"
+          icon={<BarChart3 size={18} className="text-primary" />}
+        >
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={priorityData}>
               <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} />
@@ -220,38 +254,84 @@ const AnalyticsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <ChartCard title="Upcoming 7 Days (Due Tasks)" icon={<CalendarClock size={18} className="text-primary" />}>
+        <ChartCard
+          title="Upcoming 7 Days (Due Tasks)"
+          icon={<CalendarClock size={18} className="text-primary" />}
+        >
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={upcoming7DaysData}>
               <defs>
-                <linearGradient id="dueTasksGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.35} />
-                  <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0.03} />
+                <linearGradient
+                  id="dueTasksGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor={COLORS.primary}
+                    stopOpacity={0.35}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={COLORS.primary}
+                    stopOpacity={0.03}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} />
               <XAxis dataKey="day" stroke={COLORS.textSecondary} />
               <YAxis allowDecimals={false} stroke={COLORS.textSecondary} />
               <Tooltip />
-              <Area type="monotone" dataKey="tasks" stroke={COLORS.primary} fill="url(#dueTasksGradient)" strokeWidth={2} />
+              <Area
+                type="monotone"
+                dataKey="tasks"
+                stroke={COLORS.primary}
+                fill="url(#dueTasksGradient)"
+                strokeWidth={2}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Completion Trend (Last 7 Days)" icon={<CheckCircle2 size={18} className="text-success" />}>
+        <ChartCard
+          title="Completion Trend (Last 7 Days)"
+          icon={<CheckCircle2 size={18} className="text-success" />}
+        >
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={productivityData}>
               <defs>
-                <linearGradient id="completedGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={COLORS.success} stopOpacity={0.35} />
-                  <stop offset="95%" stopColor={COLORS.success} stopOpacity={0.03} />
+                <linearGradient
+                  id="completedGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor={COLORS.success}
+                    stopOpacity={0.35}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={COLORS.success}
+                    stopOpacity={0.03}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} />
               <XAxis dataKey="day" stroke={COLORS.textSecondary} />
               <YAxis allowDecimals={false} stroke={COLORS.textSecondary} />
               <Tooltip />
-              <Area type="monotone" dataKey="completed" stroke={COLORS.success} fill="url(#completedGradient)" strokeWidth={2} />
+              <Area
+                type="monotone"
+                dataKey="completed"
+                stroke={COLORS.success}
+                fill="url(#completedGradient)"
+                strokeWidth={2}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>

@@ -747,6 +747,8 @@ export const EditMenuActions = ({
   const { projects } = useProjectsContext();
   const { updateProject } = useUpdateProject();
 
+  const { updateTask } = useUpdateTask();
+
   const parts = slug ? slug.split("-") : [];
   const projectId = parts.pop();
 
@@ -769,7 +771,7 @@ export const EditMenuActions = ({
     priority: taskActive?.priority || "",
     due_date: taskActive?.due_date || "",
     tags: taskActive?.tags || "",
-    starred: taskActive?.starred || "",
+    starred: taskActive?.starred || false,
     status: taskActive?.status || "",
   };
 
@@ -840,6 +842,20 @@ export const EditMenuActions = ({
       setIsTitleError(false);
       setIsProjectError(false);
       setIsDateError(false);
+
+      const taskUpdateData = {
+        id: formData.id_task,
+        title: formData.title_task,
+        project_id: formData.id_project,
+        description: formData.description,
+        priority: formData.priority,
+        due_date: formData.due_date,
+        tags: formData.tags,
+        starred: formData.starred,
+        status: formData.status,
+      };
+
+      updateTask(taskUpdateData);
     }
 
     handleCloseAndReset();

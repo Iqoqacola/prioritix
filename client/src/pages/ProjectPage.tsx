@@ -127,7 +127,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     getTasks();
-  }, [getTasks]);
+  }, []);
 
   if (projects === null) {
     return (

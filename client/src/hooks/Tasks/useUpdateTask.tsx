@@ -26,6 +26,8 @@ export const useUpdateTask = () => {
 
     const json = await response.json();
 
+    console.log(taskUpdate);
+
     if (!response.ok) {
       setIsLoading(false);
       setError(json.error);
