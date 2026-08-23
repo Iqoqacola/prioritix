@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth.js');
-const { getProjects, createProject, updateProject, deleteProject } = require('../controllers/projectController.js')
+const { getProjects, getProject, createProject, updateProject, deleteProject } = require('../controllers/projectController.js')
 
 // Apply authentication middleware to all task routes
 router.use(auth);
 
 // // GET All Project 
 router.get("/", getProjects)
+
+// // GET A Project
+router.get("/:id", getProject);
 
 // // POST A Project
 router.post("/", createProject)

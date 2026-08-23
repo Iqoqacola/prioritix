@@ -1,36 +1,49 @@
+"use client";
+
 import { useState } from "react";
 import { useTasksContext } from "./useTasksContext";
 
 export const useRemoveTask = () => {
   const { dispatchTasks } = useTasksContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const removeTask = async (id) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const removeTask = async (id: number) => {
     setIsLoading(true);
     setError(null);
 
-    const jwt_token = JSON.parse(localStorage.getItem("token"));
-    const response = await fetch(`/api/tasks/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt_token}`,
-      },
-    });
+    try {
+      const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-    const json = response.json();
+      const json = await response.json();
 
-    if (!response.ok) {
+      if (!response.ok) {
+        setError(json.error);
+        return;
+      }
+
+      dispatchTasks({
+        type: "REMOVE_TASK",
+        payload: { id },
+      });
+    } catch (err) {
+      console.error("Remove task failed:", err);
+      setError("Failed to remove task");
+    } finally {
       setIsLoading(false);
-      setError(json.error);
-    }
-
-    if (response.ok) {
-      setIsLoading(false);
-      dispatchTasks({ type: "REMOVE_TASK", payload: { id } });
     }
   };
 
-  return { removeTask, isLoading, error };
+  return {
+    removeTask,
+    isLoading,
+    error,
+  };
 };

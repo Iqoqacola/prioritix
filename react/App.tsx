@@ -1,0 +1,44 @@
+import { Routes, Route } from "react-router";
+import MainLayout from "../client/src/components/layout/Main/MainLayoutnLayout";
+import LandingPage from "./pages/LandingPage";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "../client/src/components/ProtectedRouteedRoute";
+import Error from "./pages/Error";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import AppLayout from "../client/src/components/layout/App/AppLayoutpLayout";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
+import AllTasks from "./pages/AllTasks";
+import ProjectPage from "./pages/ProjectPage";
+import StarredPage from "./pages/Starred";
+import AnalyticsPage from "./pages/Analytics";
+
+function App() {
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<LandingPage />} />
+      </Route>
+
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/signup" element={<Signup />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/all-tasks" element={<AllTasks />} />
+          <Route path="/starred" element={<StarredPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/project/:slug" element={<ProjectPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+      </Route>
+
+      <Route path="*" element={<Error />} />
+    </Routes>
+  );
+}
+
+export default App;

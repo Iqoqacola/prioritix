@@ -1,51 +1,25 @@
+"use client";
+
 import { Search } from "lucide-react";
-import { useSearchParams, useNavigate, useLocation } from "react-router";
+import { useState } from "react";
 
-const SearchBar = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const searchQuery = searchParams.get("q") || "";
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (
-      location.pathname !== "/all-tasks" &&
-      !location.pathname.startsWith("/project")
-    ) {
-      navigate(`/all-tasks?q=${encodeURIComponent(value)}`);
-      return;
-    }
-
-    setSearchParams(
-      (prev) => {
-        if (value) {
-          prev.set("q", value);
-        } else {
-          prev.delete("q");
-        }
-        return prev;
-      },
-      { replace: true },
-    );
-  };
+export default function SearchBar() {
+  const [search, setSearch] = useState("");
 
   return (
-    <div className="relative w-full max-w-md">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-        <Search size={18} />
-      </div>
+    <div className="relative w-[220px]">
+      <Search
+        size={17}
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+      />
+
       <input
         type="text"
-        className="w-full rounded-xl border border-border bg-surface py-2 pl-10 pr-4 text-sm text-text-primary outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 placeholder:text-text-secondary"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder="Search ..."
-        value={searchQuery}
-        onChange={handleSearch}
+        className="h-9 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm outline-none focus:border-sky-400"
       />
     </div>
   );
-};
-
-export default SearchBar;
+}

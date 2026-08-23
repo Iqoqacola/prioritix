@@ -7,6 +7,8 @@ const taskRoutes = require('./src/routes/taskRoutes.js');
 const projectRoutes = require('./src/routes/projectRoutes');
 const sequelize = require('./src/config/DB.js');
 
+const cookieParser = require("cookie-parser")
+
 
 dotenv.config({
     path: './.env.dev'
@@ -16,13 +18,16 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
-    origin: process.env.ORIGIN,
+    // origin: process.env.ORIGIN,
+    origin: true,
+    credentials: true,
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
 };
 
 app.use(cors(corsOptions))
 app.use(express.json());
+app.use(cookieParser())
 app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
 
 // Routes

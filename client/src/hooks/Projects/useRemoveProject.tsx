@@ -1,40 +1,54 @@
+"use client";
+
 import { useState } from "react";
 import { useProjectsContext } from "./useProjectsContext";
 
 export const useRemoveProject = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [succes, setSucces] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [succes, setSucces] = useState<string | null>(null);
 
-  const { projects, dispatchProjects } = useProjectsContext();
+  const { dispatchProjects } = useProjectsContext();
 
-  const removeProject = async (id) => {
+  const removeProject = async (id: number) => {
     setIsLoading(true);
     setError(null);
     setSucces(null);
 
-    const jwt_token = JSON.parse(localStorage.getItem("token"));
+    try {
+      const response = await fetch(`http://localhost:3000/api/projects/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-    const response = await fetch(`/api/projects/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt_token}`,
-      },
-    });
+      const json = await response.json();
 
-    const json = await response.json();
+      if (!response.ok) {
+        setError(json.error || json.message || "Failed to remove project");
+        return;
+      }
 
-    if (!response.ok) {
+      dispatchProjects({
+        type: "REMOVE_PROJECT",
+        payload: { id },
+      });
+
+      setSucces(json.message || "Project removed");
+    } catch (err) {
+      console.error("Remove project failed:", err);
+      setError("Failed to connect to server");
+    } finally {
       setIsLoading(false);
-      setError(json.error);
-    }
-
-    if (response.ok) {
-      setIsLoading(false);
-      dispatchProjects({ type: "REMOVE_PROJECT", payload: { id } });
     }
   };
 
-  return { removeProject, isLoading, error };
+  return {
+    removeProject,
+    isLoading,
+    error,
+    succes,
+  };
 };

@@ -1,46 +1,70 @@
+"use client";
+
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import { useRouter } from "next/navigation";
 
 export const useSignup = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [succes, setSucces] = useState(null);
-  const { dispatchAuth } = useAuthContext();
+  const [succes, setSucces] = useState<string | null>(null);
 
-  const signup = async (fullName, email, password, confirmPassword) => {
+  const { dispatchAuth } = useAuthContext();
+  const router = useRouter();
+
+  const signup = async (
+    fullName: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+  ) => {
     setIsLoading(true);
     setError(null);
     setSucces(null);
 
-    const response = await fetch("/api/users/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        full_name: fullName,
-        email,
-        password,
-        confirm_password: confirmPassword,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:3000/api/users/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          full_name: fullName,
+          email,
+          password,
+          confirm_password: confirmPassword,
+        }),
+      });
 
-    const json = await response.json();
+      const json = await response.json();
 
-    if (!response.ok) {
-      setIsLoading(false);
-      setError(json.error);
-    }
+      if (!response.ok) {
+        setError(json.error || json.message || "Signup failed");
+        return;
+      }
 
-    if (response.ok) {
-      localStorage.setItem("user", JSON.stringify(json.user));
-      localStorage.setItem("token", JSON.stringify(json.token));
-
-      dispatchAuth({ type: "LOGIN", payload: json.user });
-
-      setIsLoading(false);
+      dispatchAuth({
+        type: "LOGIN",
+        payload: json.user,
+      });
 
       setSucces(json.message);
+
+      router.replace("/dashboard");
+      router.refresh();
+    } catch (err) {
+      console.error("Signup failed:", err);
+      setError("Failed to connect to server");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { signup, isLoading, error, succes };
+  return {
+    signup,
+    isLoading,
+    error,
+    succes,
+  };
 };

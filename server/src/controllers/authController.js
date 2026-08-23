@@ -55,16 +55,22 @@ const registerUser = async (req, res) => {
 
         const token = generateToken(newUser.id)
 
-        res.header('Authorization', token).status(201).json({
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+        });
+
+        return res.status(201).json({
             message: "User registered successfully",
             user: {
+                id: newUser.id,
                 full_name: newUser.full_name,
                 email: newUser.email,
                 role: newUser.role,
                 avatar_path: newUser.avatar_path,
                 created_at: newUser.created_at,
             },
-            token,
         });
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -91,23 +97,78 @@ const loginUser = async (req, res) => {
 
         const token = generateToken(user.id, jwt_expired);
 
-        res.header('Authorization', token).json({
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        return res.status(200).json({
             message: "Logged in successfully",
             user: {
+                id: user.id,
                 full_name: user.full_name,
                 email: user.email,
                 role: user.role,
                 avatar_path: user.avatar_path,
                 created_at: user.created_at
             },
-            token: token,
-        })
+        });
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
 }
 
+//Logout User
+const logoutUser = async (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
+    })
+
+    return res.status(200).json({
+        message: "Logged out succesfully"
+    })
+}
+
+//Verify User
+const verifyUser = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id, {
+            attributes: [
+                "id",
+                "full_name",
+                "email",
+                "role",
+                "avatar_path",
+            ],
+        });
+
+        if (!user) {
+
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        return res.status(200).json({
+            user
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};
+
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser,
+    verifyUser
 };

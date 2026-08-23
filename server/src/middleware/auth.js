@@ -2,19 +2,31 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
 
-    const authHeader = req.header('Authorization');
+    const token = req.cookies.token;
 
-    if (!authHeader) {
+    if (!token) {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        })
+
         return res.status(401).json({ message: "Access Denied" });
     }
-
-    const token = authHeader.replace('Bearer ', '');
 
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET);
         req.user = verified;
         next();
     } catch (err) {
-        res.status(400).json({ message: "Invalid Token" });
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        })
+
+        res.status(401).json({ message: "Invalid Token" });
     }
 };

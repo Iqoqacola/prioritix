@@ -1,17 +1,36 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
 import { useAuthContext } from "./useAuthContext";
+import { useRouter } from "next/navigation";
 
 export const useSignout = () => {
   const { dispatchAuth } = useAuthContext();
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  const signout = () => {
-    dispatchAuth({ type: "LOGOUT" });
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+  const signout = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/users/signout", {
+        method: "POST",
+        credentials: "include",
+      });
 
-    navigate("signin");
+      if (!response.ok) {
+        console.error("Signout failed");
+        return;
+      }
+
+      dispatchAuth({
+        type: "LOGOUT",
+      });
+
+      router.replace("/signin");
+      router.refresh();
+    } catch (err) {
+      console.error("Signout Failed: ", err);
+    }
   };
 
-  return { signout };
+  return {
+    signout,
+  };
 };

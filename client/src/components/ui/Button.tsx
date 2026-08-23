@@ -1,41 +1,26 @@
-import { Circle, Calendar, Plus, Filter, CheckCircle } from "lucide-react";
+import { Calendar, CheckCircle, Circle } from "lucide-react";
 import { useUpdateTask } from "../../hooks/Tasks/useUpdateTask";
+import { MoreMenuTask } from "./Menu";
 
-type TaskStatus = "pending" | "in_progress" | "completed";
-
-type TaskPriority = "low" | "medium" | "high";
-
-type Task = {
+type taskType = {
   id: number;
   title: string;
-  project_id: number;
-  description?: string;
-  status: TaskStatus;
-  priority: TaskPriority;
-  due_date?: string;
-  tags?: string;
-  starred?: boolean;
+  project_id: number | string;
+  description: string;
+  status: string;
+  priority: string;
+  due_date: string;
+  tags: string;
+  starred: boolean;
 };
 
-export const CreateButton = ({
-  handleCreateButtonClick,
-}: {
-  handleCreateButtonClick: () => void;
-}) => {
-  return (
-    <div className="fixed bottom-6 right-6 md:bottom-12 md:right-12 ">
-      <button
-        className="cursor-pointer group flex w-full items-center justify-center gap-2 rounded-full bg-primary py-2.5 px-4 text-sm font-semibold text-white shadow-md hover:bg-secondary hover:shadow-lg transition-all active:scale-95"
-        onClick={handleCreateButtonClick}
-      >
-        <Plus size={50} strokeWidth={3} />
-      </button>
-    </div>
-  );
+type TaskUpdateProps = {
+  task: taskType;
 };
 
-export const TaskRowButton = ({ task }: { task: Task }) => {
+export const TaskRowButton = ({ task }: TaskUpdateProps) => {
   const { updateTask } = useUpdateTask();
+
   const isDone = task?.status === "completed";
 
   const handleUpdate = () => {
@@ -95,7 +80,6 @@ export const TaskRowButton = ({ task }: { task: Task }) => {
           <Calendar size={14} className="mr-1.5 text-muted" />
           {task?.due_date}
         </div>
-
         {/* Priority Badge */}
         <span
           className={`hidden sm:inline-block text-xs px-2.5 py-1 rounded-full font-medium border w-20 text-center uppercase ${
@@ -108,55 +92,25 @@ export const TaskRowButton = ({ task }: { task: Task }) => {
         >
           {task?.priority}
         </span>
-
         {/* Status Text */}
         <span
-          className={`text-xs font-medium w-15 text-left capitalize ${
-            task?.status === "in_progress"
-              ? "text-secondary"
-              : "text-text-secondary"
+          className={`w-15 text-left text-xs font-medium capitalize ${
+            task?.status === "completed"
+              ? "text-emerald-500"
+              : task?.status === "in_progress"
+                ? "text-secondary"
+                : "text-text-secondary"
           }`}
         >
-          {/* Perbaikan Logic */}
           {task?.status === "completed"
             ? "Done"
             : task?.status === "in_progress"
               ? "Progress"
               : "Pending"}
         </span>
+        {/* MoreMenuTask  */}
+        <MoreMenuTask task={task} />
       </div>
     </div>
-  );
-};
-
-export const NewTaskButton = ({
-  handleCreateMenu,
-}: {
-  handleCreateMenu: () => void;
-}) => {
-  return (
-    <button
-      onClick={handleCreateMenu}
-      className="flex items-center gap-2 px-5 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-secondary shadow-lg shadow-blue-500/20 transition-all transform hover:-translate-y-0.5"
-    >
-      <Plus size={18} strokeWidth={2.5} />
-      New Task
-    </button>
-  );
-};
-
-export const FilterButton = ({
-  handleFilter,
-}: {
-  handleFilter?: () => void;
-}) => {
-  return (
-    <button
-      className="flex items-center gap-2 px-4 py-2 bg-surface border border-border text-text-secondary rounded-xl text-sm font-medium hover:bg-gray-50 hover:text-text-primary transition-all shadow-sm"
-      onClick={handleFilter}
-    >
-      <Filter size={16} />
-      <span>Filter</span>
-    </button>
   );
 };
